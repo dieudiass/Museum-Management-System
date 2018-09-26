@@ -1,0 +1,505 @@
+SET SERVEROUTPUT On;
+ 
+                CREATION OF TABLES
+
+Create table Employee(
+Emp_ID Number(5) ,
+First_Name Varchar2(20) not null,
+Last_Name Varchar2(20) not null,
+Gender Varchar2(1) Not Null,
+DOB DATE,
+Phone Number not null,
+Address Varchar2(60) not null,
+CONSTRAINT Employee_Emp_ID_pk PRIMARY KEY (Emp_ID));
+
+Create table Agent(
+Emp_ID NUMBER(5),
+Experience VARCHAR2(30),
+Qualification VARCHAR2(30),
+CONSTRAINT Agent_Emp_ID_pk PRIMARY KEY (Emp_ID),
+CONSTRAINT  Agent_Emp_ID_fk FOREIGN KEY (Emp_ID) REFERENCES Employee(Emp_ID));
+
+Create table TourAgent(
+Emp_ID NUMBER(5),
+Tourism_Certification VARCHAR2(30),
+CONSTRAINT TourAgent_Emp_ID_pk PRIMARY KEY (Emp_ID),
+CONSTRAINT  TourAgent_Emp_ID_fk FOREIGN KEY (Emp_ID) REFERENCES Employee(Emp_ID));
+
+Create table Event(
+Event_ID Number(5),
+Name VARCHAR2(30),
+Venue VARCHAR2(30),
+Price DECIMAL(9),
+CONSTRAINT Event_Event_ID_pk PRIMARY KEY (Event_ID));
+
+Create table Involvement(
+Involvement_ID Number(5),
+Date_Inv DATE DEFAULT SYSDATE,
+Time Varchar2(20),
+Event_ID Number(5),
+EMP_ID Number(5), 
+CONSTRAINT Involvement_Involvement_ID_pk PRIMARY KEY (Involvement_ID),
+CONSTRAINT Involvement_Event_ID_fk FOREIGN KEY (Event_ID) REFERENCES Event(Event_ID),
+CONSTRAINT Involvement_EMP_ID_fk FOREIGN KEY (EMP_ID) REFERENCES Employee(EMP_ID));
+
+Create table Client(
+Client_ID Number(9),
+First_Name Varchar2(20) not null,
+Last_Name Varchar2(20) not null,
+Gender Varchar2(5) Not Null,
+DOB Varchar2(50)Not Null,
+Phone Number not null,
+Address Varchar2(30) not null,
+CONSTRAINT Client_Client_ID_pk PRIMARY KEY (Client_ID));
+
+create table Payment(
+Payment_ID number(5),
+Account_No VARCHAR2(30),
+Amount number(5),
+Date_payed DATE,
+Type VARCHAR2(30),
+Client_ID number(5),
+Emp_ID number(5) ,
+CONSTRAINT Payment__Payment_ID_pk PRIMARY KEY (Payment_ID),
+CONSTRAINT Payment_Client_ID_fk FOREIGN KEY (Client_ID) REFERENCES Client(Client_ID),
+CONSTRAINT Payment_Emp_ID_fk FOREIGN KEY (Emp_ID) REFERENCES Agent(Emp_ID));
+
+Create table Booking(
+Booking_ID number(10),
+Type varchar2(20) not null,
+Description varchar2(20) not null,
+Emp_ID number(5),
+CONSTRAINT Booking_Booking_ID_pk PRIMARY KEY (Booking_ID),
+CONSTRAINT Booking_Emp_ID_fk FOREIGN KEY (Emp_ID) REFERENCES Agent(Emp_ID));
+
+Create table Reservation(
+Booking_ID number(10),
+Client_ID Number(9),
+Date_reserved DATE DEFAULT SYSDATE,
+Time Varchar2(20),
+CONSTRAINT Reservation_Reservation_ID_pk PRIMARY KEY (Booking_ID, Client_ID),
+CONSTRAINT Reservation_Booking_ID_fk FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID),
+CONSTRAINT Reservation_Client_ID_fk FOREIGN KEY (Client_ID) REFERENCES Client(Client_ID));
+
+Create table Book_Line(
+Book_Line_ID Number(5),
+Date_Bookline Varchar2(20),
+Time Varchar2(20),
+Booking_ID Number(5),
+Event_ID Number(5),
+CONSTRAINT Book_Line_Book_Line_ID_pk PRIMARY KEY (Book_Line_ID),
+CONSTRAINT Book_Line_Booking_ID_fk FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID),
+CONSTRAINT Book_Line_Event_ID_fk FOREIGN KEY(Event_ID) REFERENCES Event(Event_ID));
+
+            VIEW TABLE STRUCTURE
+
+desc Client;
+desc Reservation;
+desc Booking;
+desc Book_Line;
+desc Event;
+desc Employee;
+desc Agent;
+desc Involvement;
+desc Payment;
+desc TourAgent;
+
+          INSERTION OF DATA INTO TABLES
+
+Insert into  Event(Event_ID,Name,Venue,Price)
+Values(2032, 'crocodile soft water','T block',130);
+Insert into  Event(Event_ID,Name,Venue,Price)
+Values(2034, 'Emperors Lion' ,'Chateau B',120);
+Insert into  Event(Event_ID,Name,Venue,Price)
+Values(2030, 'Rams Tomb', 'Pyramid',150);
+Insert into  Event(Event_ID,Name,Venue,Price)
+Values(2036, 'Volcano Congo','Afrique central',100);
+Insert into  Event(Event_ID,Name,Venue,Price)
+Values(2037, 'Mandela Freedom','Cpt 4664',100);
+
+Insert into Employee(Emp_ID,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(2001,'John','Query','M','01-march-1950', 0159621535,'96 marathon street kensington jhb');
+Insert into Employee(Emp_ID,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(2002,'Allemand','Php','M','27-february-1980',0615612330,'28 Cassandra street bedworthpark vaal');
+Insert into Employee(Emp_ID,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(2003,  'Rocky','Rambo','F', '15-january-1987',0748965321,'10 jeppe street town jhb');
+Insert into Employee(Emp_ID,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(2004,  'Jason','Ocean','M','13-may-1990', 0734567123,'21 Solid street kensingtion Cpt');
+Insert into Employee(Emp_ID,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(2006, 'Roland','Phd','F','28-dec-1995',  0605691000,'29 president street townjozy jhb');
+Insert into Employee(Emp_ID,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(2005, 'Melrose','Toyota','F','16-OCT-1992',  0765689987,'50 albertina sisulu street bazvalley jhb');
+Insert into Employee(Emp_ID,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(2007, 'Benz','Mercedes','M','07-may-1970',  0895623003,'101 jules street malvern jhb');
+
+Insert into Agent(Emp_ID,Experience,Qualification)
+Values(2003, 3,'Management Diploma');
+Insert into Agent(Emp_ID,Experience,Qualification)
+Values(2004, 5,'Btech Management');
+Insert into Agent(Emp_ID,Experience,Qualification)
+Values(2007, 10,'Mtech Management');
+Insert into Agent(Emp_ID,Experience,Qualification)
+Values(2005, 4,'Degree Management');
+
+Insert into TourAgent(Emp_ID,Tourism_Certification)
+Values(2001, 'SADEC1');
+Insert into TourAgent(Emp_ID,Tourism_Certification)
+Values(2002, 'SADEC2');
+Insert into TourAgent(Emp_ID,Tourism_Certification)
+Values(2006, 'SADEC3');
+
+Insert into Client(Client_ID ,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(23, 'Cynthia','Yiyang','F','08-mar-91',0617806111,'65 Canon Str Kzn');
+Insert into client(Client_ID ,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(20, 'Lee', 'jey','M','03-feb-93',068700231,'01 Rookie Str Jhb');
+Insert into client(Client_ID ,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(16, 'Shimen', 'Lee','F', '13-jun-89',0717806514,'56 moulin Str Cpt');
+Insert into client(Client_ID ,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(24, 'La Fouine', 'Dolce','M', '20-may-80',0687809914,'45 Jules Str Durban');
+Insert into client(Client_ID ,First_Name,Last_Name,Gender,DoB,Phone,Address)
+Values(65, 'Brown', 'Metis','M', '01-jav-82',0747806500,'23 Vaar Str Port Elizabeth');
+
+Insert into Payment(Payment_ID,Account_No,Amount,Date_payed,Type,Client_ID,Emp_ID)
+Values(002,078500,1500,'26-may-2016','Current',23,2003);
+Insert into Payment(Payment_ID,Account_No,Amount,Date_payed,Type,Client_ID,Emp_ID)
+Values (003,456892,8500,'26-may-2016','Current',20,2004);
+Insert into Payment(Payment_ID,Account_No,Amount,Date_payed,Type,Client_ID,Emp_ID)
+Values (004,012358,500,'26-may-2016','Current',16,2007);
+Insert into Payment(Payment_ID,Account_No,Amount,Date_payed,Type,Client_ID,Emp_ID)
+Values (005,369258,81500,'26-may-2016','Current',24,2005);
+
+Insert into Booking(Booking_ID,Type,Description,Emp_ID)
+Values(121,  'SINGLE','+18',2004);
+Insert into Booking(Booking_ID,Type,Description,Emp_ID)
+Values(122,  'GROUP','-10',2003);
+Insert into Booking(Booking_ID,Type,Description,Emp_ID)
+Values(123,  'GROUP','-18',2005);
+Insert into Booking(Booking_ID,Type,Description,Emp_ID)
+Values(124,  'COUPLE','+18',2007);
+
+Insert into Reservation(Booking_ID, Client_ID,Date_reserved, Time)
+Values(121,23,'01-mar-2016','08:19');
+Insert into Reservation(Booking_ID, Client_ID,Date_reserved, Time)
+Values(122,16,'08-nov-2016','09:19');
+Insert into Reservation(Booking_ID, Client_ID,Date_reserved, Time)
+Values(123,24,'18-apr-2016','11:11');
+Insert into Reservation(Booking_ID, Client_ID,Date_reserved, Time)
+Values(124,65,'28-aug-2016','15:00');
+
+Insert into Involvement(Involvement_ID,Date_Inv,Time,Event_ID,Emp_ID)
+Values(11,'27-feb-2016','09:00',2032,2005);
+Insert into Involvement(Involvement_ID,Date_Inv,Time,Event_ID,Emp_ID)
+Values(12,'15-jan-2016','10:16',2034,2007);
+Insert into Involvement(Involvement_ID,Date_Inv,Time,Event_ID,Emp_ID)
+Values(13,'26-may-2016','15:02',2030,2007);
+Insert into Involvement(Involvement_ID,Date_Inv,Time,Event_ID,Emp_ID)
+Values(14,'27-june-2016','11:20',2036,2006);
+Insert into Involvement(Involvement_ID,Date_Inv,Time,Event_ID,Emp_ID)
+Values(15,'29-july-2016','17:00',2037,2006);
+
+Insert into Book_Line(Book_Line_ID,Date_Bookline,Time,Booking_ID,Event_ID)
+Values(26,'15-dec-2016','10:02',121,2032);
+Insert into Book_Line(Book_Line_ID,Date_Bookline,Time,Booking_ID,Event_ID)
+Values(22,'20-nov-2016','13:10',122,2034);
+Insert into Book_Line(Book_Line_ID,Date_Bookline,Time,Booking_ID,Event_ID)
+Values(23,'03-oct-2016','14:14',123,2030);
+Insert into Book_Line(Book_Line_ID,Date_Bookline,Time,Booking_ID,Event_ID)
+Values(24,'11-sept-2016','08:40',124,2036);
+
+
+        VIEW OF DATA IN TABLES
+
+select * from Client;
+select * from Agent ;
+select * from Payment;
+select * from Booking ;
+select * from Employee;
+select * from Reservation;
+select * from TourAgent ;
+select * from Involvement;
+select * from Event;
+select * from  Book_Line;
+
+		CONTROL STRUCTURE
+
+1.how many Client are female or male?
+
+declare
+v_client_ID number(9) ;
+v_gender Varchar2(20) :='&gender';
+v_count number := 0;
+BEGIN
+select Count(Gender) into v_count from Client where Gender=INITCAP(v_gender);
+if (v_gender <>'f') then
+DBMS_OUTPUT.PUT_LINE ('the number of Client who are male are : '||v_count);
+else
+DBMS_OUTPUT.PUT_LINE ('the number of Client who are female are : '||v_count);
+end if;
+end;
+/	
+
+2. how many Booking have been made by a certain Agent?
+
+declare 
+v_Emp_ID number(10);
+v_count number(5):=0;
+begin
+v_Emp_ID:= '&Emp_ID';
+select COUNT(Emp_ID) into v_count from booking where Emp_ID=v_Emp_ID ;
+if v_count<1 then
+DBMS_OUTPUT.PUT_LINE ('no booking is made by this  receptionist');
+else
+DBMS_OUTPUT.PUT_LINE ('the total number of bookings  made by this agent are : '|| v_count);
+end if;
+end;
+/	
+
+		COMPOSITE DATATYPE 
+
+1.creating a record by type booking from a given booking id.
+
+DECLARE
+   type Book is record
+      (V_Booking_ID Booking.Booking_ID%type,
+       V_Type Booking.Type%type,
+       V_description Booking.Description%type,
+       V_Emp_ID Booking.Emp_ID%type);
+   Book1 Book;
+   v_BookingID Booking.Booking_ID%type:=&Booking_ID;
+BEGIN
+SELECT Booking_ID,Type,Description,Emp_ID INTO Book1
+      FROM Booking
+WHERE Booking_ID=v_BookingID;
+   DBMS_OUTPUT.PUT_LINE('Book 1 Booking_ID 	: '||' '|| Book1.V_Booking_ID);
+   DBMS_OUTPUT.PUT_LINE('Book 1 Type 		: '||' '|| Book1.V_Type);
+   DBMS_OUTPUT.PUT_LINE('Book 1 description 	: '||' '|| Book1.V_description);
+   DBMS_OUTPUT.PUT_LINE('Book 1 Emp_ID 		: '||' '|| Book1.V_Emp_ID);
+END;
+/
+
+            EXPLICIT CURSOR
+
+1.CURSOR that fetchs a employee row into a record by a given employee id.
+
+DECLARE
+V_Emp_ID Employee.Emp_ID%TYPE :='&Emp_ID';
+   CURSOR Employee_cur is
+      SELECT Emp_ID,First_Name,Last_Name,Gender,DoB,Phone,Address 
+      FROM Employee
+WHERE  Emp_ID =V_Emp_ID;
+  Employee_rec Employee_cur%rowtype;
+BEGIN
+   OPEN Employee_cur;
+   LOOP
+      FETCH Employee_cur into Employee_rec;
+      EXIT WHEN Employee_cur%notfound;
+       DBMS_OUTPUT.PUT_LINE(Employee_rec.Emp_ID|| ' ' || Employee_rec.First_Name|| ' ' || 
+       Employee_rec.Last_Name|| ' ' || Employee_rec.Gender|| ' ' || Employee_rec.DoB|| ' ' || 
+       Employee_rec.Phone|| ' ' || Employee_rec.Address);
+   END LOOP;
+END;
+/
+
+
+         USER DEFINED EXCEPTIONS
+
+1.exception when Client data is not found from the data base.
+
+DECLARE
+   v_Client_ID Client.Client_ID%type := '&ClientID';
+   v_Client_FName Client.First_Name%type;
+   v_Client_Gender Client.Gender%type;
+BEGIN
+   SELECT  First_Name,Gender INTO  
+    v_Client_FName, v_Client_Gender
+   FROM Client
+   WHERE Client_ID = v_Client_ID ;
+   DBMS_OUTPUT.PUT_LINE ('First Name: '||   v_Client_FName);
+   DBMS_OUTPUT.PUT_LINE ('Gender: ' || v_Client_Gender);
+EXCEPTION
+   WHEN no_data_found THEN
+      dbms_output.put_line('No such Member!');
+   WHEN others THEN
+      dbms_output.put_line('Error!');
+END;
+/
+
+2.exception when booking data is not found from the data base using booking number.
+
+DECLARE 
+ v_Booking_ID Booking.Booking_ID%TYPE;
+ v_type Booking.type%TYPE;
+  e_invalid_booking_No EXCEPTION;
+BEGIN
+ v_Booking_ID := '& Booking_ID';
+  v_type := '&type ';
+
+  UPDATE Booking
+  SET type = v_type
+  WHERE Booking_ID = v_Booking_ID;
+  IF SQL%NOTFOUND THEN
+    RAISE e_invalid_booking_No;
+else
+  DBMS_OUTPUT.PUT_LINE('The Booking number exists');
+  END IF;
+  COMMIT;
+EXCEPTION
+WHEN e_invalid_booking_No THEN
+  DBMS_OUTPUT.PUT_LINE('The Booking number was not found.');
+END;
+/
+
+		TRIGGER
+
+CREATE OR REPLACE TRIGGER display_price_changes
+BEFORE DELETE OR INSERT OR UPDATE ON Event
+FOR EACH ROW
+WHEN (NEW.Event_ID > 0)
+
+DECLARE
+v_price:=v_old_price decimal-v_new_price decimal;
+select price into v_old_price from Event where Event_ID=v_Event_ID;
+  v_price decimal;
+v_new_price decimal;
+v_old_price decimal;
+v_Event_ID NUMBER(5):=&Event_ID;
+BEGIN
+v_new_price :='&new_price';
+v_price :=v_old_price decimal-v_new_price decimal;
+
+   dbms_output.put_line('Old salary: ' || :OLD.salary);
+   dbms_output.put_line('New salary: ' || :NEW.salary);
+   dbms_output.put_line('Salary difference: ' || v_price);
+END;
+/
+
+            PROCEDURE
+
+CREATE OR REPLACE PROCEDURE addClient(
+   V_Client_ID Client.Client_ID%type,
+   V_FName Client.First_Name%type,
+   V_lname  Client.Last_Name%type,
+   V_Gender  Client.Gender%type,
+   V_DOB Client.DOB%type,
+   V_Phone Client.Phone%type,
+   V_Address Client.Address%type)
+   IS
+   BEGIN
+      INSERT INTO Client(Client_ID ,First_Name,Last_Name,Gender,DOB,Phone,Address)VALUES(v_Client_ID, V_FName, V_lname ,V_Gender,V_DOB ,V_Phone,V_Address);
+   END;
+/
+**************************************************************
+ INVOKING A PROCEDURE addClient
+declare
+   v_Client_ID Member.Client_ID%type:='&Member_ID';
+   V_FName Client.First_Name%type:='&Member_FName';
+   V_Lname Client.Last_Name%type:='&Member_LName';
+   V_Gender Client.Gender%type:='&Gender';
+   V_DOB Client.DOB%type:='&DOB';
+   V_Phone Client.Phone%type:='&CellPhone';
+   V_Address Client.Address%type:='&City';
+begin 
+addClient(v_Client_ID, V_FName, V_Lname ,V_Gender,V_DOB ,V_Phone,V_Address);
+end;
+/
+--------------------------------------------------------------
+CREATE OR REPLACE  PROCEDURE deleteClient(
+v_Client_ID Client.Client_ID%type) 
+IS
+   BEGIN
+       DELETE FROM Client
+         WHERE Client_ID = v_Client_ID ;
+   END;
+/
+
+INVOKING A PROCEDURE deleteClient 
+declare
+   v_Client_ID Client.Client_ID%type:='&Client_ID';
+begin 
+deleteClient(v_Client_ID);
+end;
+/
+select * from Client;
+
+		FUNCTIONS
+
+Create or replace function BookingInformation(
+V_Client_ID  number) 
+return varchar2 
+IS
+v_Fname Client.First_Name%TYPE;
+v_Lname Client.Last_Name%TYPE;
+begin 
+select First_Name,Last_Name
+into  v_Fname,v_Lname from Client
+where Client_ID=V_Client_ID;
+return('The booked :'|| v_Fname ||' ,  ' || v_Lname);
+Exception
+when no_data_found then
+dbms_output.put_line('Client does not exist');
+end;
+/
+
+PREVOKING A FUCNTION BookingInformation
+
+declare
+v_Client_ID Client.Client_ID%TYPE:='&Client_ID';
+begin 
+dbms_output.put_line(BookingInformation(v_Client_ID ));
+end;
+/
+              REPORT
+
+Booking Report
+column Booking_ID           Heading'Booking ID'
+column Type                 Heading'Type'
+column Description          Heading'Description'
+column Emp_ID               Heading'Agent ID'
+
+set linesize 120
+set serveroutput on
+set verify off
+
+select * from Booking;
+
+Involvement Report
+column Involvement_ID 	   Heading 'Involvement ID'
+column Date_Inv  Heading 'Involvement Date '
+column Time      Heading 'Time'
+column Event_ID 	   Heading 'Event ID'
+column EMP_ID 	           Heading 'Employee ID'
+
+set linesize 150
+set serveroutput on
+set verify off
+
+select * from Involvement;
+
+Payment Report
+column Payment_ID        Heading 'Payment ID'	
+column Amount            Heading 'Amount' 	 
+column Date_payed        Heading 'Date'    
+column Type              Heading 'Type Of payment'	
+column Client_ID         Heading 'Client ID ' 	
+column Emp_ID            Heading'Employee ID'
+
+set linesize 130
+set serveroutput on
+set verify off
+
+select * from Payment;
+
+                REMOVE TABLES
+
+drop table Reservation CASCADE CONSTRAINTS;
+drop table Booking CASCADE CONSTRAINTS;
+drop table Book_Line CASCADE CONSTRAINTS;
+drop table Event CASCADE CONSTRAINTS;
+drop table Client CASCADE CONSTRAINTS;
+drop table Payment CASCADE CONSTRAINTS;
+drop table Agent CASCADE CONSTRAINTS;
+drop table TourAgent CASCADE CONSTRAINTS; 
+drop table Employee CASCADE CONSTRAINTS;
+drop table Involvement CASCADE CONSTRAINTS;
+______________________________________________________________
+
